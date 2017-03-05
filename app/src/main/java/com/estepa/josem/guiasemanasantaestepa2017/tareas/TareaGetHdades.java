@@ -95,7 +95,9 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
                 String nombreImagen = rutaLogoLista.substring(rutaLogoLista.lastIndexOf("/") + 1, rutaLogoLista.lastIndexOf("."));
                 String extension = rutaLogoLista.substring(rutaLogoLista.lastIndexOf("."));*/
 
-                hola caracola
+
+                System.out.println("ola caracola!!");
+
                 rutaImgAGuardar = listaHdades.get(x).getImagenesHdad().getRutaLogoListaExt();
                 urlImgAGuardar = URL_PRINCIPAL + rutaImgAGuardar;
                 nombreImgAGuardar = rutaImgAGuardar.substring(rutaImgAGuardar.lastIndexOf("/") + 1, rutaImgAGuardar.lastIndexOf("."));

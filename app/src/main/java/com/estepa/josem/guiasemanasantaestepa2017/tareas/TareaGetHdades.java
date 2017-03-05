@@ -99,6 +99,8 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
                 System.out.println("ola caracola!!");
                 System.out.println("ola caramelon!!");
 
+
+
                 rutaImgAGuardar = listaHdades.get(x).getImagenesHdad().getRutaLogoListaExt();
                 urlImgAGuardar = URL_PRINCIPAL + rutaImgAGuardar;
                 nombreImgAGuardar = rutaImgAGuardar.substring(rutaImgAGuardar.lastIndexOf("/") + 1, rutaImgAGuardar.lastIndexOf("."));

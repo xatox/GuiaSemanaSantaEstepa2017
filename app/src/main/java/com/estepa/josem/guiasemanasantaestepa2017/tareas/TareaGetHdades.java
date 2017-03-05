@@ -5,8 +5,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.estepa.josem.guiasemanasantaestepa2017.Comunes;
-import com.estepa.josem.guiasemanasantaestepa2017.clases.Detalle;
+import com.estepa.josem.guiasemanasantaestepa2017.bbdd.Consultas;
+import com.estepa.josem.guiasemanasantaestepa2017.bbdd.Inserts;
+import com.estepa.josem.guiasemanasantaestepa2017.clases.DetalleHdad;
 import com.estepa.josem.guiasemanasantaestepa2017.clases.Hermandad;
+import com.estepa.josem.guiasemanasantaestepa2017.clases.ImagenHdad;
 
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
@@ -14,10 +17,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -76,11 +77,38 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        //Log.d("MIO", "onPostExecute: " + result);
 
         List<Hermandad> listaHdades = parseaXMLHermandades(result);
 
-        Log.d("MIO", "onPostExecute: ");
+        String rutaImgAGuardar = "", urlImgAGuardar = "", nombreImgAGuardar, extImgAGuardar = "";
+
+        Consultas consultas = new Consultas(context);
+        Inserts insert = new Inserts(context);
+
+        if (consultas.isEmptyHdades()) {
+
+            List<Long> listaIdsAddHdades = insert.insertarHdades(listaHdades);
+
+            for (int x = 0; x < listaHdades.size(); x++) {
+                /*String rutaLogoLista = listaHdades.get(x).getRutaLogoLista();
+                String urlImagen = URL_PRINCIPAL + rutaLogoLista;
+                String nombreImagen = rutaLogoLista.substring(rutaLogoLista.lastIndexOf("/") + 1, rutaLogoLista.lastIndexOf("."));
+                String extension = rutaLogoLista.substring(rutaLogoLista.lastIndexOf("."));*/
+
+                hola caracola
+                rutaImgAGuardar = listaHdades.get(x).getImagenesHdad().getRutaLogoListaExt();
+                urlImgAGuardar = URL_PRINCIPAL + rutaImgAGuardar;
+                nombreImgAGuardar = rutaImgAGuardar.substring(rutaImgAGuardar.lastIndexOf("/") + 1, rutaImgAGuardar.lastIndexOf("."));
+                extImgAGuardar = rutaImgAGuardar.substring(rutaImgAGuardar.lastIndexOf("."));
+
+                TareaGuardaImagenes tareaGuardaImagenes = new TareaGuardaImagenes(context);
+                tareaGuardaImagenes.execute(urlImgAGuardar, DIR_IMAGENESLISTA, nombreImgAGuardar, extImgAGuardar);
+            }
+
+            //Log.d("MIO", "onPostExecute: listaIdsAddHdades: " + listaIdsAddHdades.size());
+        }
+
+
 
     }
 
@@ -98,7 +126,7 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
      *               <detalles>
      *                   <detalle idDetalle="n">
      *                       <titulo idTitulo="n">Nombre Titulo</titulo>
-     *                       <contenido>Contenido Detalle</contenido>
+     *                       <contenido>Contenido DetalleHdad</contenido>
      *                   </detalle>
      *                   .
      *                   .
@@ -115,58 +143,61 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
     public List<Hermandad> parseaXMLHermandades(String result) {
 
         Document doc = Comunes.parserStringToDoc(result);
-        NodeList nList = doc.getElementsByTagName(NOMBRE_NODO_HERMANDAD);
+        NodeList nListNodeHdades = doc.getElementsByTagName(NOMBRE_NODO_HERMANDAD);
 
         int idHdad = 0;
-        String nombreHermandad = null, rutaLogoLista = null, rutaLogoMediano = null, rutaLogoGrande = null;
+        String nombreHermandad = null;
+
+        ImagenHdad imagenHdad = new ImagenHdad();
 
         List<Hermandad> listaHdades = new ArrayList<Hermandad>();
-        List<Detalle> listaDetalles = new ArrayList<Detalle>();
-        List<String> listaImagenes = new ArrayList<String>();
+        List<DetalleHdad> listaDetalleHdads = new ArrayList<DetalleHdad>();
+        //List<String> listaImagenes = new ArrayList<String>();
 
-        for (int x = 0; x < nList.getLength(); x++) {
-            Node nNode = nList.item(x);
+        for (int x = 0; x < nListNodeHdades.getLength(); x++) {
+            Node nNodeHdad = nListNodeHdades.item(x);
 
-            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element eElement = (Element) nNode;
+            if (nNodeHdad.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElementHdad = (Element) nNodeHdad;
 
-                idHdad = Integer.parseInt(eElement.getAttribute(NOMBRE_NODO_IDHERMANDAD));
+                idHdad = Integer.parseInt(eElementHdad.getAttribute(NOMBRE_NODO_IDHERMANDAD));
 
-                Log.d("MIO", "onPostExecute: " + idHdad);
+                //Log.d("MIO", "onPostExecute: " + idHdad);
             }
 
-            NodeList nList2 = nNode.getChildNodes();
+            NodeList nListNodeHdad = nNodeHdad.getChildNodes();
 
-            for (int y = 0; y < nList2.getLength(); y++) {
+            for (int y = 0; y < nListNodeHdad.getLength(); y++) {
 
-                Node nNode2 = nList2.item(y);
+                Node nNodeHdadHijo = nListNodeHdad.item(y);
 
-                if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
+                if (nNodeHdadHijo.getNodeType() == Node.ELEMENT_NODE) {
 
-                    Element eElement = (Element) nNode2;
+                    Element eElementHdadHijo = (Element) nNodeHdadHijo;
 
-                    if (eElement.getNodeName().equals(NOMBRE_NODO_NOMBRE_HERMANDAD)) {
+                    if (eElementHdadHijo.getNodeName().equals(NOMBRE_NODO_NOMBRE_HERMANDAD)) {
 
-                        nombreHermandad = eElement.getTextContent();
+                        nombreHermandad = eElementHdadHijo.getTextContent();
 
-                    } else if (eElement.getNodeName().equals(NOMBRE_NODO_IMAGENES)) {
+                    } else if (eElementHdadHijo.getNodeName().equals(NOMBRE_NODO_IMAGENES)) {
 
-                        NodeList imagenes = eElement.getChildNodes();
-                        listaImagenes = parseaImagenesHermandad(imagenes);
-                        rutaLogoLista = listaImagenes.get(0);
-                        rutaLogoMediano = listaImagenes.get(1);
-                        rutaLogoGrande = listaImagenes.get(2);
+                        NodeList imagenes = eElementHdadHijo.getChildNodes();
+                        imagenHdad = parseaImagenesHermandad(imagenes);
+                        imagenHdad.setIdHdad(idHdad);
+                        //rutaLogoLista = listaImagenes.get(0);
+                        //rutaLogoMediano = listaImagenes.get(1);
+                        //rutaLogoGrande = listaImagenes.get(2);
 
-                    } else if (eElement.getNodeName().equals(NOMBRE_NODO_DETALLES)) {
+                    } else if (eElementHdadHijo.getNodeName().equals(NOMBRE_NODO_DETALLES)) {
 
-                        NodeList detalles = eElement.getChildNodes();
-                        listaDetalles = parseaDetallesHermandad(detalles);
+                        NodeList detalles = eElementHdadHijo.getChildNodes();
+                        listaDetalleHdads = parseaDetallesHermandad(detalles, idHdad);
 
                     }
                 }
             }
 
-            Hermandad hdad = new Hermandad(idHdad, nombreHermandad, rutaLogoLista, rutaLogoMediano, rutaLogoGrande, listaDetalles);
+            Hermandad hdad = new Hermandad(idHdad, nombreHermandad, imagenHdad, listaDetalleHdads);
             listaHdades.add(hdad);
         }
 
@@ -185,9 +216,10 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
      * @param listaNodosImagenes
      * @return listaImagenes
      */
-    private List<String> parseaImagenesHermandad(NodeList listaNodosImagenes) {
+    private ImagenHdad parseaImagenesHermandad(NodeList listaNodosImagenes) {
 
-        List<String> listaImagenes = new ArrayList<String>();
+        ImagenHdad imagenHdad = new ImagenHdad();
+        //List<String> listaImagenes = new ArrayList<String>();
         String imgLista = null, imgMediana = null, imgGrande = null;
 
         for (int x = 0; x < listaNodosImagenes.getLength(); x++) {
@@ -200,23 +232,26 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
                 if (eElementImg.getNodeName().equals(NOMBRE_NODO_IMAGEN_LISTA)) {
 
                     imgLista = eElementImg.getTextContent();
-                    listaImagenes.add(imgLista);
+                    //listaImagenes.add(imgLista);
+                    imagenHdad.setRutaLogoListaExt(imgLista);
 
                 } else if (eElementImg.getNodeName().equals(NOMBRE_NODO_IMAGEN_MEDIANA)) {
 
                     imgMediana = eElementImg.getTextContent();
-                    listaImagenes.add(imgMediana);
+                    //listaImagenes.add(imgMediana);
+                    imagenHdad.setRutaLogoMedianoExt(imgMediana);
 
                 } else if (eElementImg.getNodeName().equals(NOMBRE_NODO_IMAGEN_GRANDE)) {
 
                     imgGrande = eElementImg.getTextContent();
-                    listaImagenes.add(imgGrande);
+                    //listaImagenes.add(imgGrande);
+                    imagenHdad.setRutaLogoGrandeExt(imgGrande);
 
                 }
             }
         }
 
-        return listaImagenes;
+        return imagenHdad;
     }
 
     /**
@@ -224,7 +259,7 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
      *              <detalles>
      *                   <detalle idDetalle="n">
      *                       <titulo idTitulo="n">Nombre Titulo</titulo>
-     *                       <contenido>Contenido Detalle</contenido>
+     *                       <contenido>Contenido DetalleHdad</contenido>
      *                   </detalle>
      *                   .
      *                   .
@@ -233,9 +268,9 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
      * @param listaNodosDetalles
      * @return listaDetalles
      */
-    private List<Detalle> parseaDetallesHermandad(NodeList listaNodosDetalles) {
+    private List<DetalleHdad> parseaDetallesHermandad(NodeList listaNodosDetalles, int idHdad) {
 
-        List<Detalle> listaDetalles = new ArrayList<Detalle>();
+        List<DetalleHdad> listaDetalleHdads = new ArrayList<DetalleHdad>();
         int idTitulo = 0, idDetalle = 0;
         String titulo = null, contenido = null;
 
@@ -274,10 +309,10 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
                 }
             }
 
-            Detalle detalle = new Detalle(idDetalle, idTitulo, titulo, contenido);
-            listaDetalles.add(detalle);
+            DetalleHdad detalleHdad = new DetalleHdad(idDetalle, idHdad, idTitulo, titulo, contenido);
+            listaDetalleHdads.add(detalleHdad);
         }
 
-        return listaDetalles;
+        return listaDetalleHdads;
     }
 }

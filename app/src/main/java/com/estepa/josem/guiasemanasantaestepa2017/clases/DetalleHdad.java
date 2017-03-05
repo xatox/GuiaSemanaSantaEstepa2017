@@ -4,13 +4,14 @@ package com.estepa.josem.guiasemanasantaestepa2017.clases;
  * Created by xatox on 3/3/17.
  */
 
-public class Detalle {
+public class DetalleHdad {
 
-    int idDetalle, idTitulo;
+    int idDetalle, idHdad, idTitulo;
     String titulo, contenido;
 
-    public Detalle(int idDetalle, int idTitulo, String titulo, String contenido) {
+    public DetalleHdad(int idDetalle, int idHdad, int idTitulo, String titulo, String contenido) {
         this.idDetalle = idDetalle;
+        this.idHdad = idHdad;
         this.idTitulo = idTitulo;
         this.titulo = titulo;
         this.contenido = contenido;
@@ -46,5 +47,13 @@ public class Detalle {
 
     public void setContenido(String contenido) {
         this.contenido = contenido;
+    }
+
+    public int getIdHdad() {
+        return idHdad;
+    }
+
+    public void setIdHdad(int idHdad) {
+        this.idHdad = idHdad;
     }
 }

@@ -9,16 +9,18 @@ import java.util.List;
 public class Hermandad {
 
     int idHdad;
-    String nombreHdad, rutaLogoLista, rutaLogoMediano, rutaLogoGrande;
-    List<Detalle> listaDetalles;
+    String nombreHdad;
+    //String nombreHdad, rutaLogoLista, rutaLogoMediano, rutaLogoGrande;
+    ImagenHdad imagenesHdad;
+    List<DetalleHdad> listaDetalleHdads;
 
-    public Hermandad(int idHdad, String nombreHdad, String rutaLogoLista, String rutaLogoMediano, String rutaLogoGrande, List<Detalle> listaDetalles) {
+    public Hermandad(int idHdad, String nombreHdad, ImagenHdad imagenesHdad, List<DetalleHdad> listaDetalleHdads) {
         this.idHdad = idHdad;
         this.nombreHdad = nombreHdad;
-        this.rutaLogoLista = rutaLogoLista;
-        this.rutaLogoMediano = rutaLogoMediano;
-        this.rutaLogoGrande = rutaLogoGrande;
-        this.listaDetalles = listaDetalles;
+        this.imagenesHdad = imagenesHdad;
+        //this.rutaLogoMediano = rutaLogoMediano;
+        //this.rutaLogoGrande = rutaLogoGrande;
+        this.listaDetalleHdads = listaDetalleHdads;
     }
 
     public int getIdHdad() {
@@ -37,35 +39,19 @@ public class Hermandad {
         this.nombreHdad = nombreHdad;
     }
 
-    public String getRutaLogoLista() {
-        return rutaLogoLista;
+    public ImagenHdad getImagenesHdad() {
+        return imagenesHdad;
     }
 
-    public void setRutaLogoLista(String rutaLogoLista) {
-        this.rutaLogoLista = rutaLogoLista;
+    public void setImagenesHdad(ImagenHdad imagenesHdad) {
+        this.imagenesHdad = imagenesHdad;
     }
 
-    public String getRutaLogoMediano() {
-        return rutaLogoMediano;
+    public List<DetalleHdad> getListaDetalleHdads() {
+        return listaDetalleHdads;
     }
 
-    public void setRutaLogoMediano(String rutaLogoMediano) {
-        this.rutaLogoMediano = rutaLogoMediano;
-    }
-
-    public String getRutaLogoGrande() {
-        return rutaLogoGrande;
-    }
-
-    public void setRutaLogoGrande(String rutaLogoGrande) {
-        this.rutaLogoGrande = rutaLogoGrande;
-    }
-
-    public List<Detalle> getListaDetalles() {
-        return listaDetalles;
-    }
-
-    public void setListaDetalles(List<Detalle> listaDetalles) {
-        this.listaDetalles = listaDetalles;
+    public void setListaDetalleHdads(List<DetalleHdad> listaDetalleHdads) {
+        this.listaDetalleHdads = listaDetalleHdads;
     }
 }

@@ -14,6 +14,7 @@ public class BDHelperContract {
         public static final String NOMBRE_TABLA_HDADES = "Hdades";
         public static final String COLUMNA_IDHDAD = "idHdad";
         public static final String COLUMNA_NOMBRE_HDAD = "nombreHdad";
+
     }
 
     public static final class ImagenesHdad implements BaseColumns {

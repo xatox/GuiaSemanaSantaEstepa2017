@@ -37,6 +37,7 @@ public class TareaGetHdades extends AsyncTask<String, String, String> {
 
     Context context;
 
+
     public TareaGetHdades(Context context) {
         this.context = context;
     }
